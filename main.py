@@ -1,13 +1,15 @@
 import random, string
+import secrets
+from datetime import datetime
 
 number_of_digits = 12
 
 def gen_password(number_of_digits: int) -> str:
     l, u, d, p = divide_area(number_of_digits)
-    lower_text = random.choices(string.ascii_lowercase,k=l)
-    upper_text = random.choices(string.ascii_uppercase, k=u)
-    digit = random.choices(string.digits, k=d)
-    punctuation = random.choices('_-', k=2)
+    lower_text = [secrets.choice(string.ascii_lowercase) for i in range(l)]
+    upper_text = [secrets.choice(string.ascii_uppercase) for i in range(u)]
+    digit = [secrets.choice(string.digits) for i in range(d)]
+    punctuation = [secrets.choice('_-') for i in range(p)]
 
     word_list = lower_text + upper_text + digit + punctuation
     random.shuffle(word_list)
@@ -30,9 +32,16 @@ def divide_area(num: int) -> int:
         u, d, p = p, u, d
     return (l,u,d,p)
 
+def save_pass(password):
+    today = datetime.now()
+    with open('secrets.txt', mode='a') as f:
+        f.writelines(f'\n\n{today}')
+        f.writelines(f'\n{password}')
+
 
 if __name__ == "__main__":
-    gen_password(number_of_digits)
+    p = gen_password(number_of_digits)
+    save_pass(p)
 
 
 '''
